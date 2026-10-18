@@ -16,7 +16,9 @@ Unbuilt/untested scaffold to validate the core interaction:
 - Documents: MD, TXT, HTML, DOCX to each other and to PDF (Markdig, OpenXML SDK, ReverseMarkdown, WebView2 `PrintToPdf`).
   DOCX to PDF goes through HTML, so it is a simplified rendering (text, headings, lists, tables)
 
-Planned: second ring for options, PDF as input, settings, installer.
+- PDF as source: to PNG/JPG (every page, Windows.Data.Pdf) and to TXT/MD/HTML/DOCX (text via PdfPig, no layout, no OCR)
+
+Planned: second ring for options, OCR, settings, installer.
 
 ## Build
 

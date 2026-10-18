@@ -12,7 +12,7 @@ namespace FileConverter;
 
 public partial class App : Application
 {
-    private sealed record ConversionResult(string Source, string? Output, string? Error);
+    private sealed record ConversionResult(string Source, ConversionOutput? Output, string? Error);
 
     private Mutex? _mutex;
     private bool _ownsMutex;
@@ -75,13 +75,14 @@ public partial class App : Application
 
         var failed = results.Where(r => r.Error is not null).ToList();
         foreach (var r in results)
-            Log.Info(r.Error is null ? $"OK   {r.Source} -> {r.Output}" : $"FAIL {r.Source}: {r.Error}");
+            Log.Info(r.Error is null ? $"OK   {r.Source} -> {r.Output!.Path} ({r.Output.Files} Datei(en))" : $"FAIL {r.Source}: {r.Error}");
 
         if (failed.Count == 0)
         {
-            var text = results.Count == 1
-                ? $"{Path.GetFileName(results[0].Output)}"
-                : $"{results.Count} Dateien konvertiert";
+            var total = results.Sum(r => r.Output!.Files);
+            var text = results.Count == 1 && total == 1
+                ? Path.GetFileName(results[0].Output!.Path)
+                : $"{total} Dateien erzeugt";
             Balloon($"Konvertiert → {target.Label}", text, error: false);
         }
         else

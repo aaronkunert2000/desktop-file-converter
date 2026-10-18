@@ -53,6 +53,7 @@ internal static class DocumentConverter
             case ".docx":
                 if (src == ".md") DocxWriter.FromMarkdown(File.ReadAllText(source), target);
                 else if (src == ".txt") DocxWriter.FromPlainText(File.ReadAllText(source), target);
+                else if (src == ".pdf") DocxWriter.FromPlainText(PdfReader.ToPlainText(source), target);
                 else throw Unsupported(src, targetExt);
                 break;
 
@@ -68,6 +69,7 @@ internal static class DocumentConverter
         ".md" => Wrap(Markdown.ToHtml(File.ReadAllText(source), Pipeline), source),
         ".txt" => Wrap($"<div class=\"txt\">{WebUtility.HtmlEncode(File.ReadAllText(source))}</div>", source),
         ".docx" => Wrap(DocxReader.ToHtmlFragment(source), source),
+        ".pdf" => Wrap($"<div class=\"txt\">{WebUtility.HtmlEncode(PdfReader.ToPlainText(source))}</div>", source),
         ".html" => File.ReadAllText(source),
         _ => throw Unsupported(src, ".html"),
     };
@@ -75,6 +77,7 @@ internal static class DocumentConverter
     private static string ToMarkdown(string source, string src) => src switch
     {
         ".txt" => File.ReadAllText(source),
+        ".pdf" => PdfReader.ToPlainText(source),
         ".html" => HtmlToMarkdown(File.ReadAllText(source)),
         ".docx" => HtmlToMarkdown(DocxReader.ToHtmlFragment(source)),
         _ => throw Unsupported(src, ".md"),
@@ -85,6 +88,7 @@ internal static class DocumentConverter
         ".md" => Markdown.ToPlainText(File.ReadAllText(source), Pipeline),
         ".html" => Markdown.ToPlainText(HtmlToMarkdown(File.ReadAllText(source)), Pipeline),
         ".docx" => DocxReader.ToPlainText(source),
+        ".pdf" => PdfReader.ToPlainText(source),
         _ => throw Unsupported(src, ".txt"),
     };
 

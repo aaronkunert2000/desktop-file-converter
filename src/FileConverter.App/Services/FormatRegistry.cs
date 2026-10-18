@@ -19,6 +19,7 @@ public static class FormatRegistry
     // Feste Slot-Reihenfolge im Ring (im Uhrzeigersinn ab 12 Uhr)
     private static readonly string[] ImageOutputs = { ".png", ".jpg", ".webp", ".gif", ".bmp", ".tiff" };
     private static readonly string[] DocumentOutputs = { ".pdf", ".docx", ".md", ".html", ".txt" };
+    private static readonly string[] PdfOutputs = { ".png", ".jpg", ".docx", ".md", ".html", ".txt" };
 
     // Quelle (normalisiert) -> mögliche Ziele
     private static readonly Dictionary<string, HashSet<string>> DocumentMatrix = new(StringComparer.OrdinalIgnoreCase)
@@ -52,6 +53,8 @@ public static class FormatRegistry
 
     public static bool IsImage(string path) => ImageInputs.Contains(Path.GetExtension(path));
 
+    public static bool IsPdf(string path) => Path.GetExtension(path).Equals(".pdf", StringComparison.OrdinalIgnoreCase);
+
     public static bool IsDocument(string path) => DocumentMatrix.ContainsKey(Normalize(Path.GetExtension(path)));
 
     /// <summary>
@@ -69,6 +72,9 @@ public static class FormatRegistry
             var only = sourceExts.Count == 1 ? sourceExts[0] : null;
             return ImageOutputs.Select(ext => Target(ext, ext != only)).ToList();
         }
+
+        if (files.All(IsPdf))
+            return PdfOutputs.Select(ext => Target(ext, true)).ToList();
 
         if (files.All(IsDocument))
         {

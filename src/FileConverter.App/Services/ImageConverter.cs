@@ -14,7 +14,19 @@ public static class ImageConverter
 
         using var image = new MagickImage(source);   // Spike: bei Mehrbild-Dateien (GIF) nur das erste Bild
         image.AutoOrient();
+        Save(image, target, targetExtension);
+        return target;
+    }
 
+    /// <summary>Wie <see cref="Convert"/>, aber für Bilddaten im Speicher (z. B. gerenderte PDF-Seite).</summary>
+    public static void ConvertBytes(byte[] data, string targetPath, string targetExtension)
+    {
+        using var image = new MagickImage(data);
+        Save(image, targetPath, targetExtension);
+    }
+
+    private static void Save(MagickImage image, string target, string targetExtension)
+    {
         MagickFormat format;
         switch (targetExtension)
         {
@@ -37,17 +49,17 @@ public static class ImageConverter
         }
 
         image.Write(target, format);
-        return target;
     }
 
     /// <summary>name.ext, bei Kollision "name (1).ext", "name (2).ext", ...</summary>
-    public static string UniquePath(string source, string extension)
+    public static string UniquePath(string source, string extension) =>
+        UniquePath(Path.GetDirectoryName(source) ?? ".", Path.GetFileNameWithoutExtension(source), extension);
+
+    public static string UniquePath(string directory, string name, string extension)
     {
-        var dir = Path.GetDirectoryName(source) ?? ".";
-        var name = Path.GetFileNameWithoutExtension(source);
-        var candidate = Path.Combine(dir, name + extension);
+        var candidate = Path.Combine(directory, name + extension);
         for (var i = 1; File.Exists(candidate); i++)
-            candidate = Path.Combine(dir, $"{name} ({i}){extension}");
+            candidate = Path.Combine(directory, $"{name} ({i}){extension}");
         return candidate;
     }
 }
