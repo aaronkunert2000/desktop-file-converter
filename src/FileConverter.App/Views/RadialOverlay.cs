@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -175,7 +176,7 @@ public sealed class RadialOverlay : Window
             _entered = true;
             var files = e.Data.GetData(DataFormats.FileDrop) as string[];
             var targets = files is null ? null : FormatRegistry.TargetsFor(files);
-            Log.Info($"DragEnter: {files?.Length ?? 0} Datei(en), Ziele: {(targets is null ? "keine (nicht unterstützt)" : targets.Count.ToString())}");
+            Log.Info($"DragEnter: {(files is null ? "keine Dateien" : string.Join(", ", files.Select(System.IO.Path.GetFileName)))} -> Ziele: {(targets is null ? "keine (nicht unterstützt)" : targets.Count.ToString())}");
             if (files is null || targets is null)
             {
                 Dispatcher.BeginInvoke(new Action(HideRing));   // nicht unterstützt: Ring gar nicht erst zeigen

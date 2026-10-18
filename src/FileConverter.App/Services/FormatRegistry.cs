@@ -29,9 +29,17 @@ public static class FormatRegistry
         [".docx"] = new() { ".pdf", ".md", ".html", ".txt" },
     };
 
+    // Reine Textdateien werden wie .txt behandelt (Quelle für PDF, DOCX, MD, HTML)
+    private static readonly HashSet<string> PlainTextInputs = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".log", ".csv", ".tsv", ".json", ".xml", ".yml", ".yaml", ".toml", ".ini", ".cfg", ".conf", ".env",
+        ".py", ".js", ".ts", ".cs", ".java", ".c", ".cpp", ".h", ".css", ".sql", ".ps1", ".bat", ".cmd", ".sh",
+    };
+
     public static string Normalize(string ext)
     {
         ext = ext.ToLowerInvariant();
+        if (PlainTextInputs.Contains(ext)) return ".txt";
         return ext switch
         {
             ".jpeg" => ".jpg",
