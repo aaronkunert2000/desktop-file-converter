@@ -31,7 +31,7 @@ internal static class PdfRasterizer
             var options = new PdfPageRenderOptions
             {
                 DestinationWidth = (uint)Math.Round(page.Size.Width * Scale),
-                BackgroundColor = Windows.UI.Colors.White,
+                BackgroundColor = Windows.UI.Color.FromArgb(255, 255, 255, 255),
             };
             await page.RenderToStreamAsync(stream, options);
 
