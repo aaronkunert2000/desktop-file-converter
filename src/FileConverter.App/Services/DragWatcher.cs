@@ -82,7 +82,9 @@ public sealed class DragWatcher : IDisposable
         switch (message)
         {
             case WmLButtonDown:
-                _phase = IsFileSurface(x, y) ? Phase.Pressed : Phase.Idle;
+                var candidate = IsFileSurface(x, y, out var className);
+                Log.Info($"Klick auf '{className}' -> {(candidate ? "Datei-Fläche" : "ignoriert")}");
+                _phase = candidate ? Phase.Pressed : Phase.Idle;
                 _downX = x;
                 _downY = y;
                 _firePending = false;
@@ -92,6 +94,7 @@ public sealed class DragWatcher : IDisposable
                 if (_phase == Phase.Pressed && Distance(x, y, _downX, _downY) > _dragThreshold)
                 {
                     _phase = Phase.Dragging;
+                    Log.Info("Ziehen erkannt");
                     _lastX = x;
                     _lastY = y;
                     _lastMoveTick = Environment.TickCount64;
@@ -109,6 +112,7 @@ public sealed class DragWatcher : IDisposable
 
             case WmLButtonUp:
                 var wasShown = _phase == Phase.Shown;
+                Log.Info($"Maustaste los (Phase {_phase})");
                 _phase = Phase.Idle;
                 _firePending = false;
                 if (wasShown) DragEnded?.Invoke();
@@ -125,12 +129,14 @@ public sealed class DragWatcher : IDisposable
         if (!_firePending && !dwellReached) return;
 
         _phase = Phase.Shown;
+        Log.Info($"Ring ausgelöst ({(_firePending ? "Alt" : "Dwell")}) bei {_lastX},{_lastY}");
         _firePending = false;
         DragHeld?.Invoke(_lastX, _lastY);
     }
 
-    private static bool IsFileSurface(int x, int y)
+    private static bool IsFileSurface(int x, int y, out string className)
     {
+        className = "?";
         var hwnd = NativeMethods.WindowFromPoint(new NativeMethods.POINT { x = x, y = y });
         if (hwnd == IntPtr.Zero) return false;
         var root = NativeMethods.GetAncestor(hwnd, NativeMethods.GA_ROOT);
@@ -138,7 +144,8 @@ public sealed class DragWatcher : IDisposable
 
         var name = new StringBuilder(64);
         if (NativeMethods.GetClassName(root, name, name.Capacity) == 0) return false;
-        return Array.IndexOf(FileSurfaceClasses, name.ToString()) >= 0;
+        className = name.ToString();
+        return Array.IndexOf(FileSurfaceClasses, className) >= 0;
     }
 
     private static bool IsAltDown() => (NativeMethods.GetAsyncKeyState(NativeMethods.VK_MENU) & 0x8000) != 0;

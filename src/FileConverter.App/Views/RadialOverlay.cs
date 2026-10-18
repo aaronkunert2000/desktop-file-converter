@@ -99,6 +99,7 @@ public sealed class RadialOverlay : Window
         if (NativeMethods.GetDpiForMonitor(monitor, 0, out var dpiX, out _) == 0 && dpiX > 0) dpi = dpiX;
         var sizePx = (int)Math.Round(RingSize * dpi / 96.0);
 
+        Log.Info($"Overlay anzeigen: {dpi} dpi, {sizePx} px");
         var left = px - sizePx / 2;
         var top = py - sizePx / 2;
         var info = new NativeMethods.MONITORINFO { cbSize = Marshal.SizeOf<NativeMethods.MONITORINFO>() };
@@ -156,6 +157,7 @@ public sealed class RadialOverlay : Window
 
     public void HideRing()
     {
+        if (IsVisible) Log.Info("Overlay ausgeblendet");
         _watchdog.Stop();
         if (IsVisible) Hide();
         ClearRing();
@@ -173,6 +175,7 @@ public sealed class RadialOverlay : Window
             _entered = true;
             var files = e.Data.GetData(DataFormats.FileDrop) as string[];
             var targets = files is null ? null : FormatRegistry.TargetsFor(files);
+            Log.Info($"DragEnter: {files?.Length ?? 0} Datei(en), Ziele: {(targets is null ? "keine (nicht unterstützt)" : targets.Count.ToString())}");
             if (files is null || targets is null)
             {
                 Dispatcher.BeginInvoke(new Action(HideRing));   // nicht unterstützt: Ring gar nicht erst zeigen
@@ -191,6 +194,7 @@ public sealed class RadialOverlay : Window
     {
         e.Handled = true;
         var index = HitTest(e.GetPosition(_root));
+        Log.Info($"Drop auf Segment {index}");
         var files = _files;
         var target = index >= 0 ? _segments[index].Target : null;
         HideRing();
