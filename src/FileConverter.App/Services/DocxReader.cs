@@ -15,8 +15,12 @@ internal static class DocxReader
 {
     private static readonly Regex HeadingStyle = new(@"^(heading|überschrift|berschrift)\s*(\d)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
+    // "Neu > Word-Dokument" im Explorer legt eine 0-Byte-Datei an, bis sie das erste Mal gespeichert wird
+    private static bool IsEmpty(string path) => new FileInfo(path).Length == 0;
+
     public static string ToPlainText(string path)
     {
+        if (IsEmpty(path)) return "";
         using var doc = WordprocessingDocument.Open(path, false);
         var body = GetBody(doc);
         return string.Join(Environment.NewLine, body.Descendants<Paragraph>().Select(p => p.InnerText));
@@ -25,6 +29,7 @@ internal static class DocxReader
     /// <summary>HTML-Body-Inhalt (ohne html/head).</summary>
     public static string ToHtmlFragment(string path)
     {
+        if (IsEmpty(path)) return "";
         using var doc = WordprocessingDocument.Open(path, false);
         var body = GetBody(doc);
         var sb = new StringBuilder();
