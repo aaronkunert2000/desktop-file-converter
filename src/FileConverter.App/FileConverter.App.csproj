@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms> <!-- nur für NotifyIcon (Tray) -->
+    <Nullable>enable</Nullable>
+    <!-- Bewusst aus: WPF + WinForms-Implicit-Usings erzeugen sonst mehrdeutige Typen (Application, Point, ...) -->
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>FileConverter</AssemblyName>
+    <RootNamespace>FileConverter</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Bildkonvertierung (Apache-2.0). Floating 14.*, bis wir eine Version festnageln. -->
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.*" />
+  </ItemGroup>
+
+</Project>
