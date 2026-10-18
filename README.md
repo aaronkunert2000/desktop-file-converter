@@ -12,9 +12,11 @@ Unbuilt/untested scaffold to validate the core interaction:
 
 - Global low-level mouse hook detects "file dragged and held" (dwell 500 ms) or `Alt` while dragging
 - Transparent overlay window under the cursor acts as OLE drop target and draws the ring
-- Images only: PNG, JPG, WebP, GIF, BMP, TIFF (input also HEIC, ICO) via Magick.NET
+- Images: PNG, JPG, WebP, GIF, BMP, TIFF (input also HEIC, ICO) via Magick.NET
+- Documents: MD, TXT, HTML, DOCX to each other and to PDF (Markdig, OpenXML SDK, ReverseMarkdown, WebView2 `PrintToPdf`).
+  DOCX to PDF goes through HTML, so it is a simplified rendering (text, headings, lists, tables)
 
-Planned: documents (MD, DOCX, HTML, PDF), second ring for options, settings, tray UI, installer.
+Planned: second ring for options, PDF as input, settings, installer.
 
 ## Build
 

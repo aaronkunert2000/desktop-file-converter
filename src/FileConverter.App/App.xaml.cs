@@ -60,7 +60,18 @@ public partial class App : Application
     private async void OnDropped(IReadOnlyList<string> files, FormatTarget target)
     {
         Log.Info($"Drop: {files.Count} Datei(en) -> {target.Extension}");
-        var results = await Task.Run(() => files.Select(f => Convert(f, target.Extension)).ToList());
+        var results = new List<ConversionResult>();
+        foreach (var file in files)
+        {
+            try
+            {
+                results.Add(new ConversionResult(file, await ConverterRegistry.ConvertAsync(file, target.Extension), null));
+            }
+            catch (Exception ex)
+            {
+                results.Add(new ConversionResult(file, null, ex.Message));
+            }
+        }
 
         var failed = results.Where(r => r.Error is not null).ToList();
         foreach (var r in results)
@@ -76,18 +87,6 @@ public partial class App : Application
         else
         {
             Balloon("Konvertierung fehlgeschlagen", $"{failed.Count} von {results.Count}: {failed[0].Error}", error: true);
-        }
-    }
-
-    private static ConversionResult Convert(string source, string extension)
-    {
-        try
-        {
-            return new ConversionResult(source, ImageConverter.Convert(source, extension), null);
-        }
-        catch (Exception ex)
-        {
-            return new ConversionResult(source, null, ex.Message);
         }
     }
 
