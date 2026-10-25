@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Win32;
 
-namespace FileConverter;
+namespace FileConverter.Services;
 
 /// <summary>Autostart über HKCU\...\Run (kein Admin nötig).</summary>
 public static class Autostart
