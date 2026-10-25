@@ -38,3 +38,7 @@ Logs: `%APPDATA%\FileConverter\fileconverter.log`
 - `Alt` during an Explorer drag normally means "create shortcut"; the ring forces the Copy effect
 - Admin-elevated windows cannot drop onto a non-elevated app (UIPI)
 - Files without a path (mail attachments, browser downloads) are not supported yet
+
+## License
+
+MIT, see [LICENSE](LICENSE).
