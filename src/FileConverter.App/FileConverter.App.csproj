@@ -13,7 +13,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-    <Version>0.1.0</Version>
+    <Version>0.3.0</Version>
     <!-- WinForms-Analyzer meldet DPI-Einstellungen im Manifest; für WPF ist das Manifest der richtige Ort -->
     <NoWarn>$(NoWarn);WFAC010</NoWarn>
   </PropertyGroup>

@@ -96,7 +96,7 @@ public partial class App : Application
     private void CreateTray()
     {
         var menu = new System.Windows.Forms.ContextMenuStrip();
-        menu.Items.Add("FileConverter 0.1 (Spike)").Enabled = false;
+        menu.Items.Add("FileConverter 0.3").Enabled = false;
         var autostart = new System.Windows.Forms.ToolStripMenuItem("Mit Windows starten") { Checked = Autostart.IsEnabled() };
         autostart.Click += (_, _) =>
         {
