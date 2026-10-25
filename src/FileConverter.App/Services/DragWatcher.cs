@@ -21,7 +21,7 @@ public sealed class DragWatcher : IDisposable
     private const int WmLButtonUp = 0x0202;
 
     // Fenster, in denen Dateien liegen: Explorer, Desktop
-    private static readonly string[] FileSurfaceClasses = { "CabinetWClass", "ExploreWClass", "Progman", "WorkerW" };
+    private static readonly string[] FileSurfaceClasses = { "CabinetWClass", "ExploreWClass", "XamlExplorerHostIslandWindow", "Progman", "WorkerW" };
 
     private readonly NativeMethods.LowLevelMouseProc _proc;   // Referenz halten, sonst räumt der GC den Delegate ab
     private readonly DispatcherTimer _timer;
