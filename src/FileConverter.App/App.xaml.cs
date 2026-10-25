@@ -97,6 +97,12 @@ public partial class App : Application
     {
         var menu = new System.Windows.Forms.ContextMenuStrip();
         menu.Items.Add("FileConverter 0.1 (Spike)").Enabled = false;
+        var autostart = new System.Windows.Forms.ToolStripMenuItem("Mit Windows starten") { Checked = Autostart.IsEnabled() };
+        autostart.Click += (_, _) =>
+        {
+            if (Autostart.SetEnabled(!autostart.Checked)) autostart.Checked = !autostart.Checked;
+        };
+        menu.Items.Add(autostart);
         menu.Items.Add("Log öffnen", null, (_, _) => OpenLog());
         menu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
         menu.Items.Add("Beenden", null, (_, _) => Shutdown());

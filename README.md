@@ -28,6 +28,8 @@ Requires the .NET 8 SDK on Windows.
 dotnet run --project src/FileConverter.App
 ```
 
+Release build (standalone exe, no .NET needed): push a tag `vX.Y.Z`, the GitHub Action attaches `FileConverter.exe` to a release. Autostart: tray menu -> "Mit Windows starten".
+
 Logs: `%APPDATA%\FileConverter\fileconverter.log`
 
 ## Known risks (to verify in the spike)

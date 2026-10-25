@@ -1,0 +1,48 @@
+# Baut bei einem Versions-Tag (z. B. v0.2.0) oder manuellem Start eine eigenständige FileConverter.exe
+# (ohne installiertes .NET lauffähig) und hängt sie an ein GitHub-Release.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version, z. B. v0.2.0'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Eigenständige exe bauen
+        run: >
+          dotnet publish src/FileConverter.App -c Release -r win-x64
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true
+          -p:DebugType=none
+          -o dist
+
+      - name: Inhalt anzeigen
+        shell: pwsh
+        run: Get-ChildItem dist
+
+      - name: Release veröffentlichen
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.version || github.ref_name }}
+          target_commitish: ${{ github.sha }}
+          name: Desktop File Converter ${{ inputs.version || github.ref_name }}
+          body_path: .github/release-notes.md
+          files: dist/FileConverter.exe
