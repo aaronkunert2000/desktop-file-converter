@@ -109,11 +109,25 @@ public partial class App : Application
 
         _tray = new System.Windows.Forms.NotifyIcon
         {
-            Icon = System.Drawing.SystemIcons.Application,
+            Icon = LoadTrayIcon(),
             Text = "FileConverter",
             ContextMenuStrip = menu,
             Visible = true,
         };
+    }
+
+    private static System.Drawing.Icon LoadTrayIcon()
+    {
+        try
+        {
+            using var s = typeof(App).Assembly.GetManifestResourceStream("app.ico");
+            if (s != null) return new System.Drawing.Icon(s, System.Windows.Forms.SystemInformation.SmallIconSize);
+        }
+        catch (Exception ex)
+        {
+            Log.Error("Tray-Icon laden fehlgeschlagen", ex);
+        }
+        return System.Drawing.SystemIcons.Application;
     }
 
     private void Balloon(string title, string text, bool error) =>

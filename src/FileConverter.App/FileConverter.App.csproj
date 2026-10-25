@@ -11,11 +11,16 @@
     <AssemblyName>FileConverter</AssemblyName>
     <RootNamespace>FileConverter</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <Version>0.1.0</Version>
     <!-- WinForms-Analyzer meldet DPI-Einstellungen im Manifest; für WPF ist das Manifest der richtige Ort -->
     <NoWarn>$(NoWarn);WFAC010</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\app.ico" LogicalName="app.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <!-- Bildkonvertierung (Apache-2.0). Floating 14.*, bis wir eine Version festnageln. -->
